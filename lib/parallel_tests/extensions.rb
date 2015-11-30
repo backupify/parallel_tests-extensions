@@ -5,7 +5,7 @@ require 'logger' # todo move to where used in m-r-ptr gem
 
 module ParallelTests
   module Retries
-    def retry_failed_tests
+    def retry_failed_tests(ignore: nil)
       # Hacky
       if defined?(Minitest)
         if first_process?
@@ -24,6 +24,8 @@ module ParallelTests
               found_all_test_files_for_failures = false if test_files.empty?
               test_files
             end
+
+            test_files.reject! {|f| f[ignore]} if ignore
 
             # hack
             ENV.delete 'TEST_ENV_NUMBER'
